@@ -1,28 +1,49 @@
-from tkinter import *
-from tkinter import filedialog
-import customtkinter
-from PIL import Image, ImageDraw, ImageFont, ImageOps
-import os
-import ctypes
-import time
+#V0.12
 
-myappid = 'URImager' # arbitrary string
-ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-#comment
+from tkinter import *
+import tkinter
+from tkinter import filedialog as fd
+import customtkinter
+from PIL import Image, ImageDraw, ImageFont, ImageOps, ImageTk
+import os
+
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
 app = customtkinter.CTk()
-app.geometry("400x400")
+
+w = 400 # width for the Tk root
+h = 450 # height for the Tk root
+
+# get screen width and height
+ws = app.winfo_screenwidth() # width of the screen
+hs = app.winfo_screenheight() # height of the screen
+
+# calculate x and y coordinates for the Tk root window
+x = (ws/2) - (w/2)
+y = (hs/2) - (h/2)
+
+# set the dimensions of the screen
+# and where it is placed
+app.geometry('%dx%d+%d+%d' % (w, h, x, y))
+app.geometry('%dx%d+%d+%d' % (w, h, x, y))
 app.title("URImager")
 
-win = "finished"
-imageformats = [".jpg", ".JPG", ".png", ".PNG", ".jpeg", ".JPEG"]
+imageextensions = [".jpg", ".JPG", ".png", ".PNG", ".jpeg", ".JPEG"]
+progressbar_1 = ""
 
-
+# update progress bar percentage and textvariable for status
 def update(progressvar, textvar):
     progressbar_1.set(progressvar)
     message.configure(text=textvar)
+    app.update() # update tkinter main display
+
+def disable():
+    input1.configure(state=DISABLED)
+    input2.configure(state=DISABLED)
+    switch_1.configure(state=DISABLED)
+    button_1.configure(state=DISABLED)
+    button_2.configure(state=DISABLED)
     app.update()
 
 class core:
@@ -35,63 +56,73 @@ class core:
             return False
 
     reg = app.register(correct)
+    #win = filedialog.askdirectory(initialdir="C:/", title="Select photo folder.")
 
-    win = filedialog.askdirectory(initialdir="C:/", title="Select photo folder.")
-    if not win:
-        win = "Folder not selected!"
+        #if not win:
+            #update(0.01, "Folder not selected!")
+
+    def selectfolder():
+        global win
+        win = fd.askdirectory(initialdir="C:/", title="Select photo folder.")
+        folder.configure(text=win)
+        app.update()
+
+        if not win:
+            folder.configure(text="No folder selected...")
+            app.update()
 
     def urtoimage():
+
         update(0.01, "Starting")
-        imageroot = core.win
-        patient_ur = int(input1.get())
-        patient_ur_repeat = int(input2.get())
+        imagecount = 0
+        imageroot = win
+        patient_ur = input1.get()
+        patient_ur_repeat = input2.get()
         orientation = switch_1.get()
 
-
         update(0.02, "Reading Files")
-        print(isinstance(patient_ur, int))
-        #images = glob.glob(imageroot + r"\*.jpg")
         path = (imageroot + "/appended")
-        patient_ur = str(patient_ur)
-        patient_ur_repeat = str(patient_ur_repeat)
 
-        if patient_ur == patient_ur_repeat and len(str(patient_ur)) == 7:
+        if patient_ur == patient_ur_repeat and len(patient_ur) == 7 and orientation == 1:
+            disable()
 
-            if orientation == 1:
-                update(0.03, "Creating List")
-                imageList = os.listdir(imageroot)
-                lengthList = len(os.listdir(imageroot))
-                existence = 1
-                print(imageList)
+            update(0.03, "Creating List")
+            imageList = os.listdir(imageroot)
+            lengthList = len(os.listdir(imageroot))
+            existence = 1
 
+            isExist = os.path.exists(path)
+            if not isExist:
+                update(0.4, "Making directory")
+                existence = 0
+                os.makedirs(path)
 
-                isExist = os.path.exists(path)
-                if not isExist:
-                    update(0.4, "Making directory")
-                    existence = 0
-                    os.makedirs(path)
-                progressbartotal = lengthList - existence
-                progressbarsum = 0
-                increments = 1 / progressbartotal
+            progressbartotal = lengthList - existence
+            progressbarsum = 0
+            increments = 1 / progressbartotal
 
+            for extension in imageextensions:
                 for img in imageList:
-                    if img.endswith((".jpg", ".JPG", ".png", ".PNG", ".jpeg", ".JPEG")): #come back later and implement a list for formats
+                    if img.endswith(extension):
                         progressbarsum += increments
+                        imagecount = 1 + imagecount
                         update(progressbarsum, ("Processing " + img))
                         isoimage = Image.open(os.path.join(imageroot, img))
                         im = ImageOps.exif_transpose(isoimage)
                         draw = ImageDraw.Draw(im)
-                        fontsize = 1
-                        img_fraction = 0.20
+                        #fontsize = 2
+                        #img_fraction = 0.40
                         print(img)
 
-                        font = ImageFont.truetype("arial.ttf", fontsize)
-                        while font.getsize(patient_ur)[0] < img_fraction * im.size[0]:
-                            fontsize += 1
-                            font = ImageFont.truetype("arial.ttf", fontsize)
+                        #font = ImageFont.truetype("arial.ttf", fontsize)
 
-                        fontsize -= 1
-                        font = ImageFont.truetype("arial.ttf", fontsize)
+                        #while font.getsize(patient_ur)[0] < img_fraction * im.size[0]:
+                           # fontsize += 1
+                            #print(fontsize)
+                            #font = ImageFont.truetype("arial.ttf", fontsize)
+
+                        #fontsize -= 1
+                        font = ImageFont.truetype("arial.ttf", 260)
 
                         x, y = (0, 0)
                         w, h = font.getsize(patient_ur)
@@ -99,50 +130,41 @@ class core:
                         draw.rectangle((x, y, x + w, y + h), fill="white")
                         draw.text((x, y), patient_ur, fill='black', font=font)
 
-                        im.save(path + "/mani_" + img)
+                        im.save(path + "/append_" + img)
                 else:
-                    update(1, "Finished!")
-                #os.system("pause")
-            elif orientation == 0:
-                update(0, "Failed! \n Ensure all images are \n orientated appropriately.")
-                return
+                    update(1, "Finished! " + str(imagecount) + " images processed.")
         else:
-            update(0, "Failed! \n Mismatching patientUR. \n Or insufficient integers.")
-            return
+            update(0, "Failed! \n *Mismatching patientUR. \n *Insufficient integers. \n *Orientation not ticked.")
 
-def slider_callback(value):
-    progressbar_1.set(value)
-
-#Application Display Component
-#Draw main application
 frame_1 = customtkinter.CTkFrame(master=app, bg="grey")
 frame_1.pack(pady=20, padx=60, fill="both", expand=True)
+
+label=Label(master=frame_1, text="", font='Courier 11 bold', bg="#2E2E2E", foreground="white")
+label.pack()
 
 label=Label(master=frame_1, text="Patient UR", font='Courier 11 bold', bg="#2E2E2E", foreground="white")
 label.pack()
 
-#PatientUR input1
 input1 = customtkinter.CTkEntry(master=frame_1, validate="all", validatecommand=(core.reg, '%P'))
 input1.pack(pady=10, padx=10)
 
 label=Label(master=frame_1, text="Confirm Patient UR", font='Courier 11 bold', bg="#2E2E2E", foreground="white")
 label.pack()
 
-#PatientUR input2
 input2 = customtkinter.CTkEntry(master=frame_1, validate="all", validatecommand=(core.reg, '%P'))
 input2.pack(pady=10, padx=10)
 
-#Orientational switch
 switch_1 = customtkinter.CTkSwitch(master=frame_1, text="Correct Orientation?")
 switch_1.pack(pady=10, padx=10)
 
-#Start button
-button_1 = customtkinter.CTkButton(master=frame_1, command=core.urtoimage, text="Start")
+button_1 = customtkinter.CTkButton(master=frame_1, command=core.selectfolder, text="Select Folder")
 button_1.pack(pady=10, padx=10)
 
-#FilePath display label
-label=Label(master=frame_1, text=core.win, bg="#2E2E2E", foreground="white")
-label.pack(pady=10, padx=10)
+folder = Label(master=frame_1, text="No folder selected...", bg="#2E2E2E", foreground="white")
+folder.pack(pady=10, padx=10)
+
+button_2 = customtkinter.CTkButton(master=frame_1, command=core.urtoimage, text="Start")
+button_2.pack(pady=10, padx=10)
 
 message = Label(master=frame_1, text="Waiting for input...", bg="#2E2E2E", foreground="white")
 message.pack()
@@ -152,4 +174,6 @@ progressbar_1.pack(pady=10, padx=10)
 progressbar_1.set(0)
 
 app.resizable(False, False)
-app.mainloop()
+
+if __name__ == "__main__":
+    app.mainloop()
