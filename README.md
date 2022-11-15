@@ -1,6 +1,8 @@
 # UR-to-Image-Tkinter
 An automation project with Peter MacCallum to  improve the efficiency of photo processing in the CT simulation and treatment workflow. Uses python core code with heavy use of tkinter for user interface.
 
+![image](https://user-images.githubusercontent.com/14822712/202048718-1244b309-6fd9-4f6e-a63e-2a83b92025d9.png)
+
 # Project Aim
 
 Within the Moorabbin radiotherapy department, adding patient unique registration (UR) numbers to photographs is a frequently performed task in treatment and CT simulation; and standard practice involves using the outdated [Paint.Net](http://Paint.Net) image manipulation software to manually perform this daily duty. This manual process has a number of disadvantages over using script which potentially increase the chance of user error and in the most severe case, mistreatment of radiotherapy.
