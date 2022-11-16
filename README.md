@@ -23,7 +23,3 @@ This python project aims to simplify the process of adding patient numbers to ph
 - [ ]  IGL document for proper use
 - [ ]  Ability to alter image extensions available
 - [ ]  Display image extensions available from file
-
-# Bugs to Fix
-
-- [ ]  waiting…
