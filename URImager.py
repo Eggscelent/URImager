@@ -1,4 +1,4 @@
-#V1.13
+#V1.1.4
 #nuitka main.py --onefile --windows-icon-from-ico=favicon.ico --enable-plugin=tk-inter --enable-plugin=numpy --enable-plugin=pyside2 --include-data-dir=customtkinter=customtkinter --disable-console --windows-file-version=1.1.3 --windows-product-name=URImager --windows-company-name=JackRyder
 
 from tkinter import *
@@ -13,7 +13,7 @@ customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "gr
 app = customtkinter.CTk()
 
 w = 400 # width for the Tk root
-h = 450 # height for the Tk root
+h = 550 # height for the Tk root
 
 # get screen width and height
 ws = app.winfo_screenwidth() # width of the screen
@@ -27,7 +27,7 @@ y = (hs/2) - (h/2)
 # and where it is placed
 app.geometry('%dx%d+%d+%d' % (w, h, x, y))
 app.geometry('%dx%d+%d+%d' % (w, h, x, y))
-app.title("URImager")
+app.title("URImager - V1.14")
 
 # update progress bar percentage and textvariable for status
 def update(progressvar, textvar):
@@ -39,13 +39,14 @@ def updateextensions(formats):
     extensions.configure(text=formats)
     app.update()
 
-def disable():
-    input1.configure(state=DISABLED)
-    input2.configure(state=DISABLED)
-    switch_1.configure(state=DISABLED)
-    button_1.configure(state=DISABLED)
-    button_2.configure(state=DISABLED)
-    app.update()
+#def disable():
+    #input1.configure(state=DISABLED)
+    #input2.configure(state=DISABLED)
+    #input3.configure(state=DISABLED)
+    #switch_1.configure(state=DISABLED)
+    #button_1.configure(state=DISABLED)
+    #button_2.configure(state=DISABLED)
+    #app.update()
 
 imageextensions = [".jpg", ".JPG", ".png", ".PNG", ".jpeg", ".JPEG"]
 progressbar_1 = ""
@@ -54,7 +55,7 @@ class core:
     def correct(char):
         if len(str(char)) == 0:
             return True
-        elif char.isdigit() and len(str(char)) <= 7:
+        elif char.isdigit() and len(str(char)) <= 9:
             return True
         else:
             return False
@@ -80,11 +81,18 @@ class core:
         patient_ur_repeat = input2.get()
         orientation = switch_1.get()
 
+        if not input3.get():
+            fontsize = 400
+            print(fontsize)
+        else:
+            fontsize = int(input3.get())
+            print(fontsize)
+
         update(0.02, "Reading Files")
         path = (imageroot + "/appended")
 
-        if patient_ur == patient_ur_repeat and len(patient_ur) == 7 and orientation == 1:
-            disable()
+        if patient_ur == patient_ur_repeat and orientation == 1:
+            #disable()
 
             update(0.03, "Creating List")
             imageList = os.listdir(imageroot)
@@ -113,7 +121,7 @@ class core:
 
                         print(img)
 
-                        font = ImageFont.truetype("arial.ttf", 200)
+                        font = ImageFont.truetype("arial.ttf", fontsize)
 
                         x, y = (0, 0)
                         w, h = font.getsize(patient_ur)
@@ -136,14 +144,20 @@ label.pack()
 label=Label(master=frame_1, text="Patient UR", font='Courier 11 bold', bg="#2E2E2E", foreground="white")
 label.pack()
 
-input1 = customtkinter.CTkEntry(master=frame_1, validate="all", validatecommand=(core.reg, '%P'))
+input1 = customtkinter.CTkEntry(master=frame_1, validate="all", validatecommand=(core.reg, '%P'), justify="center")
 input1.pack(pady=10, padx=10)
 
 label=Label(master=frame_1, text="Confirm Patient UR", font='Courier 11 bold', bg="#2E2E2E", foreground="white")
 label.pack()
 
-input2 = customtkinter.CTkEntry(master=frame_1, validate="all", validatecommand=(core.reg, '%P'))
+input2 = customtkinter.CTkEntry(master=frame_1, validate="all", validatecommand=(core.reg, '%P'), justify="center")
 input2.pack(pady=10, padx=10)
+
+label=Label(master=frame_1, text="Font Size (Default 400)", font='Courier 11 bold', bg="#2E2E2E", foreground="white")
+label.pack()
+
+input3 = customtkinter.CTkEntry(master=frame_1, validate="all", validatecommand=(core.reg, '%P'), justify="center")
+input3.pack(pady=10, padx=10)
 
 switch_1 = customtkinter.CTkSwitch(master=frame_1, text="Correct Orientation?")
 switch_1.pack(pady=10, padx=10)
@@ -165,23 +179,6 @@ progressbar_1.pack(pady=10, padx=10)
 progressbar_1.set(0)
 
 app.resizable(False, False)
-
-def update(progressvar, textvar):
-    progressbar_1.set(progressvar)
-    message.configure(text=textvar)
-    app.update() # update tkinter main display
-
-def updateextensions(formats):
-    extensions.configure(text=formats)
-    app.update()
-
-def disable():
-    input1.configure(state=DISABLED)
-    input2.configure(state=DISABLED)
-    switch_1.configure(state=DISABLED)
-    button_1.configure(state=DISABLED)
-    button_2.configure(state=DISABLED)
-    app.update()
 
 if __name__ == "__main__":
     app.mainloop()
