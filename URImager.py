@@ -135,25 +135,25 @@ class core:
         else:
             update(0, "Failed! \n *Mismatching patientUR. \n *Insufficient integers. \n *Orientation not ticked.")
 
-frame_1 = customtkinter.CTkFrame(master=app, bg="grey")
+frame_1 = customtkinter.CTkFrame(master=app, bg_color="grey")
 frame_1.pack(pady=20, padx=60, fill="both", expand=True)
 
-label=Label(master=frame_1, text="", font='Courier 11 bold', bg="#2E2E2E", foreground="white")
+label=Label(master=frame_1, text="", font='Courier 11 bold', bg="#2E2E2E", fg="white")
 label.pack()
 
-label=Label(master=frame_1, text="Patient UR", font='Courier 11 bold', bg="#2E2E2E", foreground="white")
+label=Label(master=frame_1, text="Patient UR", font='Courier 11 bold', bg="#2E2E2E", fg="white")
 label.pack()
 
 input1 = customtkinter.CTkEntry(master=frame_1, validate="all", validatecommand=(core.reg, '%P'), justify="center")
 input1.pack(pady=10, padx=10)
 
-label=Label(master=frame_1, text="Confirm Patient UR", font='Courier 11 bold', bg="#2E2E2E", foreground="white")
+label=Label(master=frame_1, text="Confirm Patient UR", font='Courier 11 bold', bg="#2E2E2E", fg="white")
 label.pack()
 
 input2 = customtkinter.CTkEntry(master=frame_1, validate="all", validatecommand=(core.reg, '%P'), justify="center")
 input2.pack(pady=10, padx=10)
 
-label=Label(master=frame_1, text="Font Size (Default 400)", font='Courier 11 bold', bg="#2E2E2E", foreground="white")
+label=Label(master=frame_1, text="Font Size (Default 400)", font='Courier 11 bold', bg="#2E2E2E", fg="white")
 label.pack()
 
 input3 = customtkinter.CTkEntry(master=frame_1, validate="all", validatecommand=(core.reg, '%P'), justify="center")
@@ -165,16 +165,16 @@ switch_1.pack(pady=10, padx=10)
 button_1 = customtkinter.CTkButton(master=frame_1, command=core.selectfolder, text="Select Folder")
 button_1.pack(pady=10, padx=10)
 
-folder = Label(master=frame_1, text="No folder selected...", bg="#2E2E2E", foreground="white")
+folder = Label(master=frame_1, text="No folder selected...", bg="#2E2E2E", fg="white")
 folder.pack(pady=10, padx=10)
 
 button_2 = customtkinter.CTkButton(master=frame_1, command=core.urtoimage, text="Start")
 button_2.pack(pady=10, padx=10)
 
-message = Label(master=frame_1, text="Waiting for input...", bg="#2E2E2E", foreground="white")
+message = Label(master=frame_1, text="Waiting for input...", bg="#2E2E2E", fg="white")
 message.pack()
 
-progressbar_1 = customtkinter.CTkProgressBar(master=frame_1, orient=HORIZONTAL)
+progressbar_1 = customtkinter.CTkProgressBar(master=frame_1, orientation=HORIZONTAL)
 progressbar_1.pack(pady=10, padx=10)
 progressbar_1.set(0)
 
