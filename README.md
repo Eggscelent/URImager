@@ -15,7 +15,7 @@ This python project aims to simplify the process of adding patient numbers to ph
 
 # Things to Add
 
-- [ ]  Change font size feature (Maybe preview text shows size at top of program)
+- [x]  Change font size feature (default size 400)
 - [ ]  Support for 6-7 UR numbers
 - [ ]  Support for 9 UR numbers
 - [ ]  Change position of UR numbers (x,y) or corners (left, right)
